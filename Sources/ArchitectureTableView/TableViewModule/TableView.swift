@@ -48,7 +48,7 @@ public final class TableView: UITableView, ViewProtocol {
         keyboardDismissMode = .onDrag
         separatorStyle = .none
         
-        setup(with: viewProperties)
+        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -60,19 +60,20 @@ public final class TableView: UITableView, ViewProtocol {
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
         
-        reload(with: viewProperties)
+        setup()
+        reload()
     }
     
     // MARK: - Private properties
     
-    private func setup(with viewProperties: ViewProperties) {
+    private func setup() {
         delegate = viewProperties.dataStorage.tableViewDelegate
         dataSource = viewProperties.dataStorage.tableViewDataSource
         estimatedRowHeight = viewProperties.rowHeight
         rowHeight = UITableView.automaticDimension
     }
     
-    private func reload(with viewProperties: ViewProperties) {
+    private func reload() {
         guard viewProperties.isReload == true else { return }
         self.viewProperties.dataStorage.registerFor(self)
         self.reloadData()
