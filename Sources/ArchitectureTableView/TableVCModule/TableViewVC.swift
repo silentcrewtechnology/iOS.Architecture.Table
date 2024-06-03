@@ -21,6 +21,20 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         let confirmButtonTap: ClosureEmpty
         let confirmButtonTitle: String?
         var confirmButtonState: ButtonViewStyle.State
+        
+        public init(
+            screenTitle: String?,
+            addTableView: @escaping Closure<UIView>,
+            confirmButtonTap: @escaping ClosureEmpty,
+            confirmButtonTitle: String?,
+            confirmButtonState: ButtonViewStyle.State
+        ) {
+            self.screenTitle = screenTitle
+            self.addTableView = addTableView
+            self.confirmButtonTap = confirmButtonTap
+            self.confirmButtonTitle = confirmButtonTitle
+            self.confirmButtonState = confirmButtonState
+        }
     }
     
     public var viewProperties: ViewProperties

@@ -17,6 +17,18 @@ public final class TableView: UITableView, ViewProtocol {
         let setupTableView: Closure<UITableView>
         let rowHeight: CGFloat
         var isReload: Bool
+        
+        public init(
+            dataStorage: GenericTableViewDataStorage, 
+            setupTableView: @escaping Closure<UITableView>,
+            rowHeight: CGFloat,
+            isReload: Bool
+        ) {
+            self.dataStorage = dataStorage
+            self.setupTableView = setupTableView
+            self.rowHeight = rowHeight
+            self.isReload = isReload
+        }
     }
     
     public var viewProperties: ViewProperties
