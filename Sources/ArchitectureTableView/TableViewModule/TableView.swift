@@ -19,10 +19,10 @@ public final class TableView: UITableView, ViewProtocol {
         var isReload: Bool
         
         public init(
-            dataStorage: GenericTableViewDataStorage, 
-            setupTableView: @escaping Closure<UITableView>,
-            rowHeight: CGFloat,
-            isReload: Bool
+            dataStorage: GenericTableViewDataStorage = .empty,
+            setupTableView: @escaping Closure<UITableView> = { _ in },
+            rowHeight: CGFloat = 72,
+            isReload: Bool = false
         ) {
             self.dataStorage = dataStorage
             self.setupTableView = setupTableView
