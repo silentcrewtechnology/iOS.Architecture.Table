@@ -15,7 +15,7 @@ public final class TableViewUpdater: ViewUpdater<TableView> {
     public struct TableViewModel {
         let rowHeight: CGFloat
         
-        init(rowHeight: CGFloat = 64) {
+        public init(rowHeight: CGFloat = 64) {
             self.rowHeight = rowHeight
         }
     }
