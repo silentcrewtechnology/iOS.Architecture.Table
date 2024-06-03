@@ -17,9 +17,9 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public struct ViewProperties {
         let screenTitle: String?
-        let confirmButtonTap: ClosureEmpty
         let addTableView: Closure<UIView>
-        let confirmButtonTitle: String
+        let confirmButtonTap: ClosureEmpty
+        let confirmButtonTitle: String?
         var confirmButtonState: ButtonViewStyle.State
     }
     
@@ -27,7 +27,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     // MARK: - Private properties
     
-    private var buttonViewProperties: ButtonView.ViewProperties
+    private var buttonViewProperties: ButtonView.ViewProperties?
     private let confirmButton = ButtonView(
         frame: .init(
             x: 0,
@@ -46,15 +46,17 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public init(viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        buttonViewProperties = ButtonView.ViewProperties(
-            attributedText:  viewProperties.confirmButtonTitle.attributed
-        )
         
         super.init(nibName: nil, bundle: nil)
         
-        buttonViewProperties.onTap = { [weak self] in
-            self?.view.endEditing(true)
-            self?.viewProperties.confirmButtonTap()
+        if let buttonTitle = viewProperties.confirmButtonTitle {
+            buttonViewProperties = ButtonView.ViewProperties(
+                attributedText: buttonTitle.attributed
+            )
+            buttonViewProperties?.onTap = { [weak self] in
+                self?.view.endEditing(true)
+                self?.viewProperties.confirmButtonTap()
+            }
         }
     }
     
@@ -75,7 +77,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        setupBottomButton()
         confirmButtonState()
     }
 
@@ -96,11 +97,15 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     }
     
     private func confirmButtonState() {
+        guard var buttonViewProperties = buttonViewProperties else { return }
+        
         style.state = viewProperties.confirmButtonState
         style.update(viewProperties: &buttonViewProperties)
     }
     
     private func setupBottomButton() {
+        guard var buttonViewProperties = buttonViewProperties else { return }
+        
         view.addSubview(confirmButton)
         confirmButton.center.x = view.center.x
         

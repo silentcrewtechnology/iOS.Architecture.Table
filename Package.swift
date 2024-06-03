@@ -10,7 +10,7 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ios-architecture-table-view",
+            name: "ArchitectureTableView",
             targets: ["ios-architecture-table-view"]),
     ],
     dependencies: [
