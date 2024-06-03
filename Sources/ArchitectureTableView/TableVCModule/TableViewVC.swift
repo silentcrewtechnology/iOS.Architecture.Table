@@ -17,17 +17,35 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public struct ViewProperties {
         let screenTitle: String?
-        let confirmButtonTap: ClosureEmpty
         let addTableView: Closure<UIView>
-        let confirmButtonTitle: String
+        let confirmButtonTap: ClosureEmpty
+        let confirmButtonTitle: String?
         var confirmButtonState: ButtonViewStyle.State
+        var shouldShowActivityIndicator: Bool
+        
+        public init(
+            screenTitle: String?,
+            addTableView: @escaping Closure<UIView>,
+            confirmButtonTap: @escaping ClosureEmpty,
+            confirmButtonTitle: String?,
+            confirmButtonState: ButtonViewStyle.State,
+            shouldShowActivityIndicator: Bool = false
+        ) {
+            self.screenTitle = screenTitle
+            self.addTableView = addTableView
+            self.confirmButtonTap = confirmButtonTap
+            self.confirmButtonTitle = confirmButtonTitle
+            self.confirmButtonState = confirmButtonState
+            self.shouldShowActivityIndicator = shouldShowActivityIndicator
+        }
     }
     
     public var viewProperties: ViewProperties
     
     // MARK: - Private properties
     
-    private var buttonViewProperties: ButtonView.ViewProperties
+    private lazy var activityIndicator = UIActivityIndicatorView()
+    private var buttonViewProperties: ButtonView.ViewProperties?
     private let confirmButton = ButtonView(
         frame: .init(
             x: 0,
@@ -36,6 +54,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             height: 50
         )
     )
+    
     private var style = ButtonViewStyle(
         context: .action(.contained),
         state: .default,
@@ -46,15 +65,17 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public init(viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        buttonViewProperties = ButtonView.ViewProperties(
-            attributedText:  viewProperties.confirmButtonTitle.attributed
-        )
         
         super.init(nibName: nil, bundle: nil)
         
-        buttonViewProperties.onTap = { [weak self] in
-            self?.view.endEditing(true)
-            self?.viewProperties.confirmButtonTap()
+        if let buttonTitle = viewProperties.confirmButtonTitle {
+            buttonViewProperties = ButtonView.ViewProperties(
+                attributedText: buttonTitle.attributed
+            )
+            buttonViewProperties?.onTap = { [weak self] in
+                self?.view.endEditing(true)
+                self?.viewProperties.confirmButtonTap()
+            }
         }
     }
     
@@ -75,7 +96,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        setupBottomButton()
+        viewProperties.shouldShowActivityIndicator ? showActivityIndicator() : hideActivityIndicator()
         confirmButtonState()
     }
 
@@ -96,17 +117,39 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     }
     
     private func confirmButtonState() {
+        guard var buttonViewProperties = buttonViewProperties else { return }
+        
         style.state = viewProperties.confirmButtonState
         style.update(viewProperties: &buttonViewProperties)
     }
     
     private func setupBottomButton() {
+        guard var buttonViewProperties = buttonViewProperties else { return }
+        
         view.addSubview(confirmButton)
         confirmButton.center.x = view.center.x
         
         style.state = .default
         style.update(viewProperties: &buttonViewProperties)
         confirmButton.update(with: buttonViewProperties)
+    }
+    
+    private func showActivityIndicator() {
+        guard !activityIndicator.isDescendant(of: view) else { return }
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.style = .large
+        activityIndicator.startAnimating()
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    private func hideActivityIndicator() {
+        guard activityIndicator.isDescendant(of: view) else { return }
+        
+        activityIndicator.stopAnimating()
+        activityIndicator.removeFromSuperview()
     }
     
     @objc private func backTapped() {

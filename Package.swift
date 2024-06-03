@@ -4,14 +4,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "ios-architecture-table-view",
+    name: "ArchitectureTableView",
     platforms: [
         .iOS(.v15)
     ],
     products: [
         .library(
-            name: "ios-architecture-table-view",
-            targets: ["ios-architecture-table-view"]),
+            name: "ArchitectureTableView",
+            targets: ["ArchitectureTableView"]),
     ],
     dependencies: [
         .package(url: "https://gitlab.akbars.tech/abo/ios.architecture", .upToNextMinor(from: "0.0.6")),
@@ -19,14 +19,14 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ios-architecture-table-view",
+            name: "ArchitectureTableView",
             dependencies: [
                 .product(name: "Architecture", package: "ios.architecture"),
                 .product(name: "DesignSystem", package: "ios.designsystem"),
             ]
         ),
         .testTarget(
-            name: "ios-architecture-table-viewTests",
-            dependencies: ["ios-architecture-table-view"]),
+            name: "ArchitectureTableViewTests",
+            dependencies: ["ArchitectureTableView"]),
     ]
 )
