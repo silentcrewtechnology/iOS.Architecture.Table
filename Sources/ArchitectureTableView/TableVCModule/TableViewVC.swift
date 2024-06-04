@@ -17,66 +17,40 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public struct ViewProperties {
         let screenTitle: String?
-        let addTableView: Closure<UIView>
-        let confirmButtonTap: ClosureEmpty
-        let confirmButtonTitle: String?
-        var confirmButtonState: ButtonViewStyle.State
+        let tableView: UIView
+        let confirmButtonView: UIView?
         var shouldShowActivityIndicator: Bool
         
         public init(
             screenTitle: String?,
-            addTableView: @escaping Closure<UIView>,
-            confirmButtonTap: @escaping ClosureEmpty,
-            confirmButtonTitle: String?,
-            confirmButtonState: ButtonViewStyle.State,
+            tableView: UIView,
+            confirmButtonView: UIView?,
             shouldShowActivityIndicator: Bool = false
         ) {
             self.screenTitle = screenTitle
-            self.addTableView = addTableView
-            self.confirmButtonTap = confirmButtonTap
-            self.confirmButtonTitle = confirmButtonTitle
-            self.confirmButtonState = confirmButtonState
+            self.tableView = tableView
+            self.confirmButtonView = confirmButtonView
             self.shouldShowActivityIndicator = shouldShowActivityIndicator
         }
     }
     
-    public var viewProperties: ViewProperties
-    
     // MARK: - Private properties
     
-    private lazy var activityIndicator = UIActivityIndicatorView()
-    private var buttonViewProperties: ButtonView.ViewProperties?
-    private let confirmButton = ButtonView(
-        frame: .init(
-            x: 0,
-            y: (UIScreen.main.bounds.height - 100),
-            width: (UIScreen.main.bounds.width - 32),
-            height: 50
-        )
-    )
+    public var viewProperties: ViewProperties
     
-    private var style = ButtonViewStyle(
-        context: .action(.contained),
-        state: .default,
-        size: .sizeM
-    )
+    // MARK: - UI
+    
+    private lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Life cycle
     
-    public init(viewProperties: ViewProperties) {
+    public init(
+        viewProperties: ViewProperties
+    ) {
         self.viewProperties = viewProperties
-        
         super.init(nibName: nil, bundle: nil)
-        
-        if let buttonTitle = viewProperties.confirmButtonTitle {
-            buttonViewProperties = ButtonView.ViewProperties(
-                attributedText: buttonTitle.attributed
-            )
-            buttonViewProperties?.onTap = { [weak self] in
-                self?.view.endEditing(true)
-                self?.viewProperties.confirmButtonTap()
-            }
-        }
+        addTableView(with: viewProperties)
+        addConfirmButtonView(with: viewProperties)
     }
     
     required init?(coder: NSCoder) {
@@ -85,10 +59,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewProperties.addTableView(view)
-        setupBottomButton()
-        confirmButtonState()
         setupNavBar()
     }
     
@@ -97,7 +67,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
         viewProperties.shouldShowActivityIndicator ? showActivityIndicator() : hideActivityIndicator()
-        confirmButtonState()
     }
 
     // MARK: - Private methods
@@ -116,24 +85,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         title = viewProperties.screenTitle
     }
     
-    private func confirmButtonState() {
-        guard var buttonViewProperties = buttonViewProperties else { return }
-        
-        style.state = viewProperties.confirmButtonState
-        style.update(viewProperties: &buttonViewProperties)
-    }
-    
-    private func setupBottomButton() {
-        guard var buttonViewProperties = buttonViewProperties else { return }
-        
-        view.addSubview(confirmButton)
-        confirmButton.center.x = view.center.x
-        
-        style.state = .default
-        style.update(viewProperties: &buttonViewProperties)
-        confirmButton.update(with: buttonViewProperties)
-    }
-    
     private func showActivityIndicator() {
         guard !activityIndicator.isDescendant(of: view) else { return }
         
@@ -150,6 +101,21 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         activityIndicator.stopAnimating()
         activityIndicator.removeFromSuperview()
+    }
+    
+    func addTableView(with viewProperties: ViewProperties) {
+        view.addSubview(viewProperties.tableView)
+        viewProperties.tableView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    func addConfirmButtonView(with viewProperties: ViewProperties) {
+        guard let confirmButtonView = viewProperties.confirmButtonView else { return }
+        view.addSubview(confirmButtonView)
+        confirmButtonView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     @objc private func backTapped() {
