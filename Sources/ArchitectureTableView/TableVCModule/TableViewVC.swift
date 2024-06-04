@@ -48,9 +48,12 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties: ViewProperties
     ) {
         self.viewProperties = viewProperties
+        
         super.init(nibName: nil, bundle: nil)
+        
         addTableView()
         addConfirmButtonView()
+        addActivityIndicator()
     }
     
     required init?(coder: NSCoder) {
