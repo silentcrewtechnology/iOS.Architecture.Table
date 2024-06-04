@@ -21,7 +21,7 @@ public final class TableView: UITableView, ViewProtocol {
         public let separatorInset: UIEdgeInsets
         public let dataSources: UITableViewDataSource
         public let delegate: UITableViewDelegate
-        public var didTapGesture: ClosureEmpty = {}
+        public var didTapGesture: ClosureEmpty?
 
         public init(
             allowsSelection: Bool = true,
@@ -31,7 +31,7 @@ public final class TableView: UITableView, ViewProtocol {
             separatorInset: UIEdgeInsets = .zero,
             dataSources: UITableViewDataSource,
             delegate: UITableViewDelegate,
-            didTapGesture: @escaping ClosureEmpty = {}
+            didTapGesture: ClosureEmpty? = nil
         ) {
             self.allowsSelection = allowsSelection
             self.separatorInset = separatorInset
@@ -97,6 +97,8 @@ public final class TableView: UITableView, ViewProtocol {
     }
     
     private func addGesture() {
+        guard viewProperties.didTapGesture != nil else { return }
+        
         let hideGuest = UITapGestureRecognizer(
             target: self,
             action: #selector(didTapGesture)
@@ -107,6 +109,6 @@ public final class TableView: UITableView, ViewProtocol {
     
     @objc
     private func didTapGesture() {
-        viewProperties.didTapGesture()
+        viewProperties.didTapGesture?()
     }
 }
