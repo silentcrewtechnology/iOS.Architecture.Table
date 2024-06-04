@@ -19,7 +19,10 @@ public struct TableViewBuilder: BuilderProtocol {
     // MARK: - Life cycle
     
     public init(with viewProperties: TableView.ViewProperties) {
-        view = TableView(viewProperties: viewProperties)
+        view = TableView(
+            viewProperties: viewProperties,
+            style: .plain
+        )
         viewUpdater = TableViewUpdater(
             viewProperties: viewProperties,
             update: view.update

@@ -19,18 +19,18 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         let screenTitle: String?
         let tableView: UIView
         let confirmButtonView: UIView?
-        var shouldShowActivityIndicator: Bool
+        let activityIndicator: UIView?
         
         public init(
             screenTitle: String?,
             tableView: UIView,
             confirmButtonView: UIView?,
-            shouldShowActivityIndicator: Bool = false
+            activityIndicator: UIView?
         ) {
             self.screenTitle = screenTitle
             self.tableView = tableView
             self.confirmButtonView = confirmButtonView
-            self.shouldShowActivityIndicator = shouldShowActivityIndicator
+            self.activityIndicator = activityIndicator
         }
     }
     
@@ -48,9 +48,12 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties: ViewProperties
     ) {
         self.viewProperties = viewProperties
+        
         super.init(nibName: nil, bundle: nil)
-        addTableView(with: viewProperties)
-        addConfirmButtonView(with: viewProperties)
+        
+        addTableView()
+        addConfirmButtonView()
+        addActivityIndicator()
     }
     
     required init?(coder: NSCoder) {
@@ -66,7 +69,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        viewProperties.shouldShowActivityIndicator ? showActivityIndicator() : hideActivityIndicator()
     }
 
     // MARK: - Private methods
@@ -85,36 +87,28 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         title = viewProperties.screenTitle
     }
     
-    private func showActivityIndicator() {
-        guard !activityIndicator.isDescendant(of: view) else { return }
-        
-        view.addSubview(activityIndicator)
-        activityIndicator.style = .large
-        activityIndicator.startAnimating()
-        activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-    }
-    
-    private func hideActivityIndicator() {
-        guard activityIndicator.isDescendant(of: view) else { return }
-        
-        activityIndicator.stopAnimating()
-        activityIndicator.removeFromSuperview()
-    }
-    
-    func addTableView(with viewProperties: ViewProperties) {
+    private func addTableView() {
         view.addSubview(viewProperties.tableView)
         viewProperties.tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
     
-    func addConfirmButtonView(with viewProperties: ViewProperties) {
+    private func addConfirmButtonView() {
         guard let confirmButtonView = viewProperties.confirmButtonView else { return }
+        
         view.addSubview(confirmButtonView)
         confirmButtonView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+    }
+    
+    private func addActivityIndicator() {
+        guard let activityIndicator = viewProperties.activityIndicator else { return }
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
     }
     
