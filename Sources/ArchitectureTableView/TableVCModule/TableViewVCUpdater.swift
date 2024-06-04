@@ -15,8 +15,6 @@ public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
     
     public enum State {
         case updateViewProperties(TableViewVC.ViewProperties)
-        case updateConfirmButtonState(ButtonViewStyle.State)
-        case updateActivityIndicator(Bool)
     }
     
     public var state: State? {
@@ -49,10 +47,6 @@ public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
         switch state {
         case .updateViewProperties(let viewProperties):
             self.viewProperties = viewProperties
-        case .updateConfirmButtonState(let confirmButtonState):
-            viewProperties.confirmButtonState = confirmButtonState
-        case .updateActivityIndicator(let shouldShowActivityIndicator):
-            viewProperties.shouldShowActivityIndicator = shouldShowActivityIndicator
         }
         
         update(viewProperties)
