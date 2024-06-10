@@ -18,29 +18,35 @@ public final class TableView: UITableView, ViewProtocol {
         public let separatorColor: UIColor
         public let backgroundColor: UIColor
         public let rowHeight: CGFloat
+        public let radius: CGFloat
         public let separatorInset: UIEdgeInsets
         public let dataSources: UITableViewDataSource
         public let delegate: UITableViewDelegate
         public var didTapGesture: ClosureEmpty?
+        public let isScrollEnabled: Bool
 
         public init(
             allowsSelection: Bool = true,
             separatorColor: UIColor = .clear,
             backgroundColor: UIColor = .clear,
             rowHeight: CGFloat = 72,
+            radius: CGFloat = 0,
             separatorInset: UIEdgeInsets = .zero,
             dataSources: UITableViewDataSource,
             delegate: UITableViewDelegate,
-            didTapGesture: ClosureEmpty? = nil
+            didTapGesture: ClosureEmpty? = nil,
+            isScrollEnabled: Bool = true
         ) {
             self.allowsSelection = allowsSelection
             self.separatorInset = separatorInset
             self.separatorColor = separatorColor
             self.backgroundColor = backgroundColor
             self.rowHeight = rowHeight
+            self.radius = radius
             self.dataSources = dataSources
             self.delegate = delegate
             self.didTapGesture = didTapGesture
+            self.isScrollEnabled = isScrollEnabled
         }
     }
     
@@ -84,9 +90,10 @@ public final class TableView: UITableView, ViewProtocol {
         separatorColor = viewProperties.separatorColor
         separatorInset = viewProperties.separatorInset
         allowsSelection = viewProperties.allowsSelection
+        isScrollEnabled = viewProperties.isScrollEnabled
         showsVerticalScrollIndicator = false
         cornerRadius(
-            radius: 10,
+            radius: viewProperties.radius,
             direction: .allCorners,
             clipsToBounds: true
         )
