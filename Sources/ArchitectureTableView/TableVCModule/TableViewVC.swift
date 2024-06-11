@@ -38,10 +38,6 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public var viewProperties: ViewProperties
     
-    // MARK: - UI
-    
-    private lazy var activityIndicator = UIActivityIndicatorView()
-    
     // MARK: - Life cycle
     
     public init(
