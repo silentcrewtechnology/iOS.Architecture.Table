@@ -12,7 +12,6 @@ public class GenericTableViewCellWrapper<ContentType: UIView & Reusable>: UITabl
     
     // MARK: - Public properties
     
-    public var mainVisibleFrame: CGRect { return self.bounds }
     public var contentInset: UIEdgeInsets = .zero {
         didSet {
             if oldValue != contentInset {

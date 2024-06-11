@@ -13,7 +13,7 @@ public class GenericTableViewDataSource: NSObject, UITableViewDataSource {
     // MARK: - Private properties
     
     private weak var dataStorage: GenericTableViewDataStorage?
-    private var tableView: UITableView?
+    private weak var tableView: UITableView?
     
     // MARK: - Life cycle
     
