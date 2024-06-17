@@ -24,6 +24,7 @@ public final class TableView: UITableView, ViewProtocol {
         public let delegate: UITableViewDelegate
         public var didTapGesture: ClosureEmpty?
         public let isScrollEnabled: Bool
+        public let accessibilityId: String?
 
         public init(
             allowsSelection: Bool = true,
@@ -35,7 +36,8 @@ public final class TableView: UITableView, ViewProtocol {
             dataSources: UITableViewDataSource,
             delegate: UITableViewDelegate,
             didTapGesture: ClosureEmpty? = nil,
-            isScrollEnabled: Bool = true
+            isScrollEnabled: Bool = true,
+            accessibilityId: String? = nil
         ) {
             self.allowsSelection = allowsSelection
             self.separatorInset = separatorInset
@@ -47,6 +49,7 @@ public final class TableView: UITableView, ViewProtocol {
             self.delegate = delegate
             self.didTapGesture = didTapGesture
             self.isScrollEnabled = isScrollEnabled
+            self.accessibilityId = accessibilityId
         }
     }
     
@@ -74,7 +77,7 @@ public final class TableView: UITableView, ViewProtocol {
     
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        
+        accessibilityIdentifier = viewProperties.accessibilityId
         setupTableView()
         reloadData()
     }
