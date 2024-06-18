@@ -40,7 +40,7 @@ public extension UIView {
     
     func applyBottomSeparator(with leftMargin: CGFloat) {
         if bottomSeparator == nil {
-            var separator = HorizontalSeparatorView(
+            let separator = HorizontalSeparatorView(
                 frame: CGRectMake(
                     .zero,
                     bounds.size.height - HorizontalSeparatorView.separatorThickness,
@@ -54,7 +54,7 @@ public extension UIView {
             bottomSeparator = separator
         }
         
-        guard var separator = bottomSeparator else { return }
+        guard let separator = bottomSeparator else { return }
         
         separator.frame = CGRectMake(
             leftMargin,
@@ -84,7 +84,7 @@ public extension UIView {
     
     func applyTopSeparator(with leftMargin: CGFloat) {
         if topSeparator == nil {
-            var separator = HorizontalSeparatorView(
+            let separator = HorizontalSeparatorView(
                 frame: CGRectMake(
                     .zero,
                     HorizontalSeparatorView.separatorThickness,
@@ -98,7 +98,7 @@ public extension UIView {
             topSeparator = separator
         }
         
-        guard var separator = topSeparator else { return }
+        guard let separator = topSeparator else { return }
         
         separator.frame = CGRectMake(
             leftMargin,
@@ -111,7 +111,7 @@ public extension UIView {
     
     // MARK: - Refactored bok_removeTopSeparator
     
-    public func removeTopSeparator() {
+    func removeTopSeparator() {
         if topSeparator != nil {
             topSeparator?.removeFromSuperview()
             topSeparator = nil

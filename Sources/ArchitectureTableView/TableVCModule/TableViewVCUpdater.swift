@@ -1,13 +1,5 @@
-//
-//  TableViewVCUpdater.swift
-//  
-//
-//  Created by user on 31.05.2024.
-//
-
 import UIKit
 import Architecture
-import DesignSystem
 
 public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
     

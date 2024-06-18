@@ -1,10 +1,3 @@
-//
-//  TableView.swift
-//
-//
-//  Created by user on 31.05.2024.
-//
-
 import Architecture
 import UIKit
 import Components
@@ -14,18 +7,18 @@ public final class TableView: UITableView, ViewProtocol {
     // MARK: - Public properties
     
     public struct ViewProperties {
-        public let allowsSelection: Bool
-        public let separatorColor: UIColor
-        public let backgroundColor: UIColor
-        public let rowHeight: CGFloat
-        public let radius: CGFloat
-        public let separatorInset: UIEdgeInsets
-        public let dataSources: UITableViewDataSource
-        public let delegate: UITableViewDelegate
+        public var allowsSelection: Bool
+        public var separatorColor: UIColor
+        public var backgroundColor: UIColor
+        public var rowHeight: CGFloat
+        public var radius: CGFloat
+        public var separatorInset: UIEdgeInsets
+        public var dataSources: UITableViewDataSource?
+        public var delegate: UITableViewDelegate?
         public var didTapGesture: ClosureEmpty?
-        public let isScrollEnabled: Bool
-        public let accessibilityId: String?
-
+        public var isScrollEnabled: Bool
+        public var accessibilityId: String?
+        
         public init(
             allowsSelection: Bool = true,
             separatorColor: UIColor = .clear,
@@ -33,8 +26,8 @@ public final class TableView: UITableView, ViewProtocol {
             rowHeight: CGFloat = 72,
             radius: CGFloat = 0,
             separatorInset: UIEdgeInsets = .zero,
-            dataSources: UITableViewDataSource,
-            delegate: UITableViewDelegate,
+            dataSources: UITableViewDataSource? = nil,
+            delegate: UITableViewDelegate? = nil,
             didTapGesture: ClosureEmpty? = nil,
             isScrollEnabled: Bool = true,
             accessibilityId: String? = nil
