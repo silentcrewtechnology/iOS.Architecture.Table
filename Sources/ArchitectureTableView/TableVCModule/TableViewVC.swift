@@ -1,31 +1,24 @@
-//
-//  TableViewVC.swift
-//
-//
-//  Created by user on 31.05.2024.
-//
-
 import UIKit
+import SnapKit
 import Architecture
-import Components
-import DesignSystem
 import ImagesService
+import Colors
 
 public final class TableViewVC: UIViewController, ViewProtocol {
     
     // MARK: - Public properties
     
     public struct ViewProperties {
-        let screenTitle: String?
-        let tableView: UIView
-        let confirmButtonView: UIView?
-        let activityIndicator: UIView?
+        public var screenTitle: String?
+        public var tableView: UIView
+        public var confirmButtonView: UIView?
+        public var activityIndicator: UIView?
         
         public init(
-            screenTitle: String?,
+            screenTitle: String? = nil,
             tableView: UIView,
-            confirmButtonView: UIView?,
-            activityIndicator: UIView?
+            confirmButtonView: UIView? = nil,
+            activityIndicator: UIView? = nil
         ) {
             self.screenTitle = screenTitle
             self.tableView = tableView
