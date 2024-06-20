@@ -13,8 +13,8 @@ let package = Package(
             targets: ["ArchitectureTableView"]),
     ],
     dependencies: [
-        .package(url: "https://gitlab.akbars.tech/abo/ios.architecture", .upToNextMinor(from: "1.0.0")),
-        .package(url: "https://gitlab.akbars.tech/abo/ios.designsystem", .upToNextMinor(from: "4.0.3")),
+        .package(url: "https://gitlab.akbars.tech/abo/ios.architecture", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://gitlab.akbars.tech/abo/ios.designsystem", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
         .target(
