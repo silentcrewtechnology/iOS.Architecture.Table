@@ -3,24 +3,25 @@ import SnapKit
 import Architecture
 import ImagesService
 import Colors
+import Components
 
 public final class TableViewVC: UIViewController, ViewProtocol {
     
     // MARK: - Public properties
     
     public struct ViewProperties {
-        public var screenTitle: String?
+        public var navigationBarViewProperties: NavigationBar.ViewProperties
         public var tableView: UIView
         public var confirmButtonView: UIView?
         public var activityIndicator: UIView?
         
         public init(
-            screenTitle: String? = nil,
+            navigationBarViewProperties: NavigationBar.ViewProperties,
             tableView: UIView,
             confirmButtonView: UIView? = nil,
             activityIndicator: UIView? = nil
         ) {
-            self.screenTitle = screenTitle
+            self.navigationBarViewProperties = navigationBarViewProperties
             self.tableView = tableView
             self.confirmButtonView = confirmButtonView
             self.activityIndicator = activityIndicator
@@ -49,9 +50,10 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        setupNavBar()
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupNavigationBar()
     }
     
     // MARK: - Public methods
@@ -62,18 +64,9 @@ public final class TableViewVC: UIViewController, ViewProtocol {
 
     // MARK: - Private methods
     
-    private func setupNavBar() {
-        let barItem = UIBarButtonItem(
-            image: .ic24ChevronLeft.withTintColor(.contentPrimary),
-            style: .plain,
-            target: self,
-            action: #selector(backTapped))
-        navigationItem.leftBarButtonItem = barItem
-        navigationItem.largeTitleDisplayMode = .never
-        navigationItem.backBarButtonItem = .init(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.backButtonTitle = nil
-        
-        title = viewProperties.screenTitle
+    private func setupNavigationBar() {
+        let navigationBar = navigationController as? NavigationBar
+        navigationBar?.update(with: viewProperties.navigationBarViewProperties)
     }
     
     private func addTableView() {
