@@ -10,13 +10,13 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     // MARK: - Public properties
     
     public struct ViewProperties {
-        public var navigationBarViewProperties: NavigationBar.ViewProperties
+        public var navigationBarViewProperties: NavigationBar.ViewProperties?
         public var tableView: UIView
         public var confirmButtonView: UIView?
         public var activityIndicator: UIView?
         
         public init(
-            navigationBarViewProperties: NavigationBar.ViewProperties,
+            navigationBarViewProperties: NavigationBar.ViewProperties? = nil,
             tableView: UIView,
             confirmButtonView: UIView? = nil,
             activityIndicator: UIView? = nil
@@ -38,12 +38,11 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties: ViewProperties
     ) {
         self.viewProperties = viewProperties
-        
         super.init(nibName: nil, bundle: nil)
-        
         addTableView()
         addConfirmButtonView()
         addActivityIndicator()
+        setupNavigationBar(viewProperties: viewProperties)
     }
     
     required init?(coder: NSCoder) {
@@ -52,8 +51,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        setupNavigationBar()
+        setupNavigationBar(viewProperties: viewProperties)
     }
     
     // MARK: - Public methods
@@ -64,9 +62,10 @@ public final class TableViewVC: UIViewController, ViewProtocol {
 
     // MARK: - Private methods
     
-    private func setupNavigationBar() {
+    private func setupNavigationBar(viewProperties: ViewProperties) {
+        guard let navigationBarViewProperties = viewProperties.navigationBarViewProperties else { return }
         let navigationBar = navigationController as? NavigationBar
-        navigationBar?.update(with: viewProperties.navigationBarViewProperties)
+        navigationBar?.update(with: navigationBarViewProperties)
     }
     
     private func addTableView() {
