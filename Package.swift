@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://gitlab.akbars.tech/abo/ios.architecture", .upToNextMajor(from: "3.0.0")),
-        .package(url: "https://gitlab.akbars.tech/abo/ios.designsystem", .upToNextMajor(from: "20.0.0")),
+        .package(url: "https://gitlab.akbars.tech/abo/ios.designsystem", .upToNextMajor(from: "21.0.0")),
     ],
     targets: [
         .target(
