@@ -15,5 +15,6 @@ public struct CellModel {
         self.view = view
         self.selectionStyle = selectionStyle
         self.height = height
+        self.didTap = didTap
     }
 }
