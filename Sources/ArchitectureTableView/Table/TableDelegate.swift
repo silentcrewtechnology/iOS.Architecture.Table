@@ -24,5 +24,23 @@ public final class TableDelegate: NSObject, UITableViewDelegate {
         let row = sections[indexPath.section].cells[indexPath.row]
         return row.height ?? UITableView.automaticDimension
     }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionData = sections[section]
+        return sectionData.headerView
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let sectionData = sections[section]
+        return sectionData.footerView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return sections[section].headerHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return sections[section].footerHeight
+    }
 }
 
