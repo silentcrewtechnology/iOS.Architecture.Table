@@ -4,7 +4,7 @@ public struct CellModel {
     public let view: UIView
     public let selectionStyle: UITableViewCell.SelectionStyle
     public let height: CGFloat?
-    public let didTap: ((IndexPath) -> Void)? = nil
+    public let didTap: ((IndexPath) -> Void)?
     
     public init(
         view: UIView,
