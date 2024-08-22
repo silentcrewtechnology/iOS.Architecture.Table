@@ -31,7 +31,11 @@ public final class TableDataSource: NSObject, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = sections[indexPath.section]
         let row = section.cells[indexPath.row]
-        let cell = row.view.toCell(tableView, cellForRowAt: indexPath)
+        let cell = row.view.toCell(
+            tableView,
+            cellForRowAt: indexPath,
+            insets: row.insets
+        )
         cell.selectionStyle = row.selectionStyle
         return cell
     }

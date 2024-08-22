@@ -40,7 +40,8 @@ public final class ContainerTableCell: UITableViewCell {
 public extension UIView {
     func toCell(
         _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
+        cellForRowAt indexPath: IndexPath,
+        insets: UIEdgeInsets = .zero
     ) -> UITableViewCell {
         
         let cell = ContainerTableCell.dequeueReusableCell(
@@ -52,7 +53,7 @@ public extension UIView {
         cell.contentView.addSubview(self)
 
         self.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.edges.equalToSuperview().inset(insets)
         }
 
         return cell
