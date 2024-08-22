@@ -5,16 +5,19 @@ public struct CellModel {
     public let selectionStyle: UITableViewCell.SelectionStyle
     public let height: CGFloat?
     public let didTap: ((IndexPath) -> Void)?
+    public let insets: UIEdgeInsets
     
     public init(
         view: UIView,
         selectionStyle: UITableViewCell.SelectionStyle = .gray,
         height: CGFloat?,
-        didTap: ((IndexPath) -> Void)? = nil
+        didTap: ((IndexPath) -> Void)? = nil,
+        insets: UIEdgeInsets = .zero
     ) {
         self.view = view
         self.selectionStyle = selectionStyle
         self.height = height
         self.didTap = didTap
+        self.insets = insets
     }
 }
