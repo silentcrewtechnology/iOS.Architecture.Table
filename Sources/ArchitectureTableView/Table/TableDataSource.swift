@@ -37,6 +37,7 @@ public final class TableDataSource: NSObject, UITableViewDataSource {
             insets: row.insets
         )
         cell.selectionStyle = row.selectionStyle
+        cell.backgroundColor = section.cells[indexPath.row].backgroundColor
         return cell
     }
 }
