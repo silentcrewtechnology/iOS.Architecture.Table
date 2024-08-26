@@ -10,6 +10,8 @@ import DesignSystem
 
 public struct SectionRowModelService {
     
+    public init() { }
+    
     public func createSections(
         from rows: [DSRowModel],
         rowsHeight: CGFloat? = nil,
