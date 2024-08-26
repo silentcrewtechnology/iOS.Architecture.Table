@@ -1,5 +1,6 @@
 import UIKit
 import Architecture
+import Components
 
 public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
     
@@ -7,6 +8,7 @@ public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
     
     public enum State {
         case updateViewProperties(TableViewVC.ViewProperties)
+        case updateNavBarProperties(NavigationBar.ViewProperties)
     }
     
     public var state: State? {
@@ -39,6 +41,8 @@ public final class TableViewVCUpdater: ViewUpdater<TableViewVC> {
         switch state {
         case .updateViewProperties(let viewProperties):
             self.viewProperties = viewProperties
+        case .updateNavBarProperties(let navigationBarViewProperties):
+            self.viewProperties.navigationBarViewProperties = navigationBarViewProperties
         }
         
         update(viewProperties)
