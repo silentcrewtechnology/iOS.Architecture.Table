@@ -157,25 +157,3 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         navigationController?.popViewController(animated: true)
     }
 }
-
-// MARK: - NavigationBar.ViewProperties Extension
- 
-extension NavigationBar.ViewProperties: Equatable {
-    public static func == (
-        lhs: NavigationBar.ViewProperties,
-        rhs: NavigationBar.ViewProperties
-    ) -> Bool {
-        return lhs.leftBarButtonItems == rhs.leftBarButtonItems 
-            && lhs.rightBarButtonItems == rhs.rightBarButtonItems
-            && lhs.titleView == rhs.titleView
-            && lhs.title == rhs.title
-            && lhs.largeTitleDisplayMode == rhs.largeTitleDisplayMode
-            && lhs.prefersLargeTitles == rhs.prefersLargeTitles
-            && lhs.standartAppearance == rhs.standartAppearance
-            && lhs.compactAppearance == rhs.compactAppearance
-            && lhs.scrollEdgeAppearance == rhs.scrollEdgeAppearance
-            && lhs.searchController == rhs.searchController
-            && lhs.hidesSearchBarWhenScrolling == rhs.hidesSearchBarWhenScrolling
-            && lhs.isNavigationBarHidden == rhs.isNavigationBarHidden
-    }
-}
