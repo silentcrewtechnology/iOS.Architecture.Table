@@ -4,7 +4,7 @@ public struct CellModel {
     public let view: UIView
     public let selectionStyle: UITableViewCell.SelectionStyle
     public let height: CGFloat?
-    public let didTap: ((IndexPath) -> Void)?
+    public let didTap: ((UITableView, IndexPath) -> Void)?
     public let insets: UIEdgeInsets
     public let backgroundColor: UIColor
     
@@ -12,7 +12,7 @@ public struct CellModel {
         view: UIView,
         selectionStyle: UITableViewCell.SelectionStyle = .gray,
         height: CGFloat?,
-        didTap: ((IndexPath) -> Void)? = nil,
+        didTap: ((UITableView, IndexPath) -> Void)? = nil,
         insets: UIEdgeInsets = .zero,
         backgroundColor: UIColor = .white
     ) {
