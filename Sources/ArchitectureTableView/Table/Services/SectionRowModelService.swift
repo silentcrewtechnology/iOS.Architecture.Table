@@ -12,27 +12,30 @@ public struct SectionRowModelService {
     
     public init() { }
     
-    public func createSections(
+    public func createSection(
         from rows: [DSRowModel],
         rowsHeight: CGFloat? = nil,
         cellBackgroundColor: UIColor = .white
-    ) -> [SectionModel] {
-        return rows.map { row in
-            let cell = DSCreationRowsViewService().createViewRowWithBlocks(
+    ) -> SectionModel {
+        let cellModels = rows.map { row in
+            let rowView = DSCreationRowsViewService().createViewRowWithBlocks(
                 leading: row.leading,
                 center: row.center,
                 trailing: row.trailing,
-                centralBlockAlignment: row.centralBlockAlignment
+                centralBlockAlignment: row.centralBlockAlignment,
+                margins: row.margings
             )
             let cellModel = CellModel(
-                view: cell,
-                selectionStyle: .none,
-                height: rowsHeight,
-                didTap: nil,
+                view: rowView,
+                selectionStyle: row.cellSelectionStyle,
+                height: rowsHeight ?? row.height,
+                didTap: row.didTap,
                 backgroundColor: cellBackgroundColor
             )
             
-            return SectionModel(cells: [cellModel])
+            return cellModel
         }
+        
+        return SectionModel(cells: cellModels)
     }
 }
