@@ -17,7 +17,7 @@ public final class TableDelegate: NSObject, UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = sections[indexPath.section].cells[indexPath.row]
-        row.didTap?(indexPath)
+        row.didTap?(tableView, indexPath)
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
