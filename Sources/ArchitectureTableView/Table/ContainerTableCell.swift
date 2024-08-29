@@ -27,7 +27,7 @@ public final class ContainerTableCell: UITableViewCell {
     
     private func addView() {
         guard let view else { return }
-        self.addSubview(view)
+        contentView.addSubview(view)
     }
     
     private func setConstraints() {
@@ -35,6 +35,11 @@ public final class ContainerTableCell: UITableViewCell {
         view.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+    }
+    
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        contentView.subviews.forEach { $0.removeFromSuperview() }
     }
 }
 
