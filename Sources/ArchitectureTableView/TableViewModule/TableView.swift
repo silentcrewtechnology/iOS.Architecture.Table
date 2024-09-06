@@ -73,6 +73,7 @@ public final class TableView: UITableView, ViewProtocol {
         accessibilityIdentifier = viewProperties.accessibilityId
         setupTableView()
         reloadData()
+        layoutIfNeeded()
     }
     
     // MARK: - Private methods

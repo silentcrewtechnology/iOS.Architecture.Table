@@ -30,7 +30,7 @@ public struct SectionRowModelService {
                 selectionStyle: row.cellSelectionStyle,
                 height: rowsHeight ?? row.height,
                 didTap: row.didTap,
-                backgroundColor: cellBackgroundColor
+                backgroundColor: row.backgroundColor ?? cellBackgroundColor
             )
             
             return cellModel
