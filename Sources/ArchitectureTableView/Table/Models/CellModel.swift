@@ -6,7 +6,7 @@ public struct CellModel {
     public let height: CGFloat?
     public let didTap: ((UITableView, IndexPath) -> Void)?
     public let insets: UIEdgeInsets
-    public let backgroundColor: UIColor
+    public var backgroundColor: UIColor
     
     public init(
         view: UIView,
