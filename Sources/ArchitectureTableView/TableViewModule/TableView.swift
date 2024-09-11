@@ -70,7 +70,6 @@ public final class TableView: UITableView, ViewProtocol {
     
     public func update(with viewProperties: ViewProperties) {
         self.viewProperties = viewProperties
-        accessibilityIdentifier = viewProperties.accessibilityId
         setupTableView()
         reloadData()
         layoutIfNeeded()
@@ -89,6 +88,7 @@ public final class TableView: UITableView, ViewProtocol {
         allowsSelection = viewProperties.allowsSelection
         isScrollEnabled = viewProperties.isScrollEnabled
         showsVerticalScrollIndicator = false
+        accessibilityIdentifier = viewProperties.accessibilityId
         cornerRadius(
             radius: viewProperties.radius,
             direction: .allCorners,
