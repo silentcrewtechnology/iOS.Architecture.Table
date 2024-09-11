@@ -23,7 +23,7 @@ public final class TableView: UITableView, ViewProtocol {
             allowsSelection: Bool = true,
             separatorColor: UIColor = .clear,
             backgroundColor: UIColor = .clear,
-            rowHeight: CGFloat = 72,
+            rowHeight: CGFloat = UITableView.automaticDimension,
             radius: CGFloat = 0,
             separatorInset: UIEdgeInsets = .zero,
             dataSources: UITableViewDataSource? = nil,
