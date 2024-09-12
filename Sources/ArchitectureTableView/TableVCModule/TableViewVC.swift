@@ -14,17 +14,20 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         public var tableView: UIView
         public var confirmButtonView: UIView?
         public var activityIndicator: UIView?
+        public var lifeCycle: LifeCycle?
         
         public init(
             navigationBarViewProperties: NavigationBar.ViewProperties? = nil,
             tableView: UIView,
             confirmButtonView: UIView? = nil,
-            activityIndicator: UIView? = nil
+            activityIndicator: UIView? = nil,
+            lifeCycle: LifeCycle? = nil
         ) {
             self.navigationBarViewProperties = navigationBarViewProperties
             self.tableView = tableView
             self.confirmButtonView = confirmButtonView
             self.activityIndicator = activityIndicator
+            self.lifeCycle = lifeCycle
         }
     }
     
@@ -45,16 +48,65 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         addConfirmButtonView(viewProperties: viewProperties)
         addActivityIndicator(viewProperties: viewProperties)
         setupNavigationBar(viewProperties: viewProperties)
+        
+        viewProperties.lifeCycle?.onInit?()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        viewProperties.lifeCycle?.onViewDidLoad?()
+    }
+    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         setupNavigationBar(viewProperties: viewProperties)
+        viewProperties.lifeCycle?.onViewWillAppear?()
+    }
+    
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        viewProperties.lifeCycle?.onViewIsAppearing?()
+    }
+    
+    public override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        viewProperties.lifeCycle?.onViewWillLayoutSubViews?()
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        viewProperties.lifeCycle?.onViewDidLayoutSubviews?()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewProperties.lifeCycle?.onViewDidAppear?()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        viewProperties.lifeCycle?.onViewWillDisappear?()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        viewProperties.lifeCycle?.onViewDidDisappear?()
+    }
+    
+    deinit {
+        viewProperties.lifeCycle?.onDeinit?()
     }
     
     // MARK: - Public methods
