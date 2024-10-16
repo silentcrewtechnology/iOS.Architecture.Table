@@ -168,7 +168,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         view.addSubview(confirmButtonView)
         confirmButtonView.snp.makeConstraints {
-            $0.left.right.bottom.equalToSuperview().inset(16)
+            $0.leading.trailing.bottom.equalToSuperview().inset(16)
         }
         
         viewProperties.tableView.snp.remakeConstraints {
@@ -187,7 +187,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         view.addSubview(confirmButtonView)
         confirmButtonView.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(50)
         }
         
