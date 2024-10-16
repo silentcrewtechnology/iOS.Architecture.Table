@@ -14,6 +14,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         public var tableView: UIView
         public var confirmButtonView: UIView?
         public var activityIndicator: UIView?
+        public var backgroundColor: UIColor
         public var lifeCycle: LifeCycle?
         
         public init(
@@ -21,12 +22,14 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             tableView: UIView,
             confirmButtonView: UIView? = nil,
             activityIndicator: UIView? = nil,
+            backgroundColor: UIColor = .white,
             lifeCycle: LifeCycle? = nil
         ) {
             self.navigationBarViewProperties = navigationBarViewProperties
             self.tableView = tableView
             self.confirmButtonView = confirmButtonView
             self.activityIndicator = activityIndicator
+            self.backgroundColor = backgroundColor
             self.lifeCycle = lifeCycle
         }
     }
@@ -44,8 +47,8 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         super.init(nibName: nil, bundle: nil)
         
-        addTableView(viewProperties: viewProperties)
         addConfirmButtonView(viewProperties: viewProperties)
+        addTableView(viewProperties: viewProperties)
         addActivityIndicator(viewProperties: viewProperties)
         setupNavigationBar(viewProperties: viewProperties)
         
@@ -59,6 +62,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = viewProperties.backgroundColor
         viewProperties.lifeCycle?.onViewDidLoad?()
     }
     
@@ -112,11 +116,12 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     // MARK: - Public methods
     
     public func update(with viewProperties: ViewProperties) {
-        updateTableViewIfNeeded(newViewProperties: viewProperties)
         updateConfirmButtonIfNeeded(newViewProperties: viewProperties)
+        updateTableViewIfNeeded(newViewProperties: viewProperties)
         updateActivityIndicatorIfNeeded(newViewProperties: viewProperties)
         updateNavigationBarIfNeeded(newViewProperties: viewProperties)
         
+        view.backgroundColor = viewProperties.backgroundColor
         self.viewProperties = viewProperties
     }
     
@@ -163,7 +168,12 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         view.addSubview(confirmButtonView)
         confirmButtonView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.leading.trailing.bottom.equalToSuperview().inset(16)
+        }
+        
+        viewProperties.tableView.snp.remakeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(confirmButtonView.snp.top).inset(-16)
         }
     }
     
@@ -177,7 +187,13 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         view.addSubview(confirmButtonView)
         confirmButtonView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(50)
+        }
+        
+        viewProperties.tableView.snp.remakeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(confirmButtonView.snp.top).inset(-16)
         }
     }
     
@@ -202,10 +218,5 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         activityIndicator.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-    }
-    
-    @objc private func backTapped() {
-        view.endEditing(true)
-        navigationController?.popViewController(animated: true)
     }
 }
