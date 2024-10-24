@@ -47,8 +47,8 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         super.init(nibName: nil, bundle: nil)
         
-        addConfirmButtonView(viewProperties: viewProperties)
         addTableView(viewProperties: viewProperties)
+        addConfirmButtonView(viewProperties: viewProperties)
         addActivityIndicator(viewProperties: viewProperties)
         setupNavigationBar(viewProperties: viewProperties)
         
@@ -116,8 +116,8 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     // MARK: - Public methods
     
     public func update(with viewProperties: ViewProperties) {
-        updateConfirmButtonIfNeeded(newViewProperties: viewProperties)
         updateTableViewIfNeeded(newViewProperties: viewProperties)
+        updateConfirmButtonIfNeeded(newViewProperties: viewProperties)
         updateActivityIndicatorIfNeeded(newViewProperties: viewProperties)
         updateNavigationBarIfNeeded(newViewProperties: viewProperties)
         
@@ -145,10 +145,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     }
     
     private func addTableView(viewProperties: ViewProperties) {
-        view.addSubview(viewProperties.tableView)
-        viewProperties.tableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
+        addTableViewAndMakeConstraints(with: viewProperties.tableView)
     }
     
     private func updateTableViewIfNeeded(newViewProperties: ViewProperties) {
@@ -157,8 +154,12 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties.tableView.snp.removeConstraints()
         viewProperties.tableView.removeFromSuperview()
         
-        view.addSubview(newViewProperties.tableView)
-        newViewProperties.tableView.snp.makeConstraints {
+        addTableViewAndMakeConstraints(with: newViewProperties.tableView)
+    }
+    
+    private func addTableViewAndMakeConstraints(with tableView: UIView) {
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
@@ -166,15 +167,8 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     private func addConfirmButtonView(viewProperties: ViewProperties) {
         guard let confirmButtonView = viewProperties.confirmButtonView else { return }
         
-        view.addSubview(confirmButtonView)
-        confirmButtonView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalToSuperview().inset(16)
-        }
-        
-        viewProperties.tableView.snp.remakeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(confirmButtonView.snp.top).inset(-16)
-        }
+        addConfirmButtonAndMakeConstraints(with: confirmButtonView)
+        remakeTableViewConstraints(with: viewProperties.tableView, button: confirmButtonView)
     }
     
     private func updateConfirmButtonIfNeeded(newViewProperties: ViewProperties) {
@@ -185,37 +179,45 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties.confirmButtonView?.snp.removeConstraints()
         viewProperties.confirmButtonView?.removeFromSuperview()
         
-        view.addSubview(confirmButtonView)
-        confirmButtonView.snp.makeConstraints {
+        addConfirmButtonAndMakeConstraints(with: confirmButtonView)
+        remakeTableViewConstraints(with: viewProperties.tableView, button: confirmButtonView)
+    }
+    
+    private func addConfirmButtonAndMakeConstraints(with button: UIView) {
+        view.addSubview(button)
+        button.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(50)
         }
-        
-        viewProperties.tableView.snp.remakeConstraints {
+    }
+    
+    private func remakeTableViewConstraints(with tableView: UIView, button: UIView) {
+        tableView.snp.remakeConstraints {
             $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(confirmButtonView.snp.top).inset(-16)
+            $0.bottom.equalTo(button.snp.top).inset(-16)
         }
     }
     
     private func addActivityIndicator(viewProperties: ViewProperties) {
-        guard let activityIndicator = viewProperties.activityIndicator else { return }
+        guard let loader = viewProperties.activityIndicator else { return }
         
-        view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
+        addLoaderAndMakeConstraints(with: loader)
     }
     
     private func updateActivityIndicatorIfNeeded(newViewProperties: ViewProperties) {
         guard newViewProperties.activityIndicator != viewProperties.activityIndicator,
-              let activityIndicator =  newViewProperties.activityIndicator
+              let loader =  newViewProperties.activityIndicator
         else { return }
         
         viewProperties.activityIndicator?.snp.removeConstraints()
         viewProperties.activityIndicator?.removeFromSuperview()
         
-        view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints { make in
+        addLoaderAndMakeConstraints(with: loader)
+    }
+    
+    private func addLoaderAndMakeConstraints(with loader: UIView) {
+        view.addSubview(loader)
+        loader.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
