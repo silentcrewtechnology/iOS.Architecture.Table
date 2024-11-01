@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AccessibilityIds
 
 public class TableViewRowModel {
     
@@ -128,6 +129,7 @@ public class TableViewRowModel {
         defaultSeparator: SeparatorStyle
     ) -> UITableViewCell {
         let cell = provideCellFor(tableView, at: indexPath)
+        cell.accessibilityIdentifier = TableArchAccessibilityIDs.TableViewRowModel.cell + "\(indexPath.section)_\(indexPath.row)"
         configureSeparatorFor(cell, at: indexPath, in: tableView, defaultStyle: defaultSeparator)
         
         if let configurationBlock = configurationBlock {
