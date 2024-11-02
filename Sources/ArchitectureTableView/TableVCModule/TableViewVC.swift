@@ -4,6 +4,8 @@ import Architecture
 import ImagesService
 import Colors
 import Components
+import Services
+import Combine
 
 public final class TableViewVC: UIViewController, ViewProtocol {
     
@@ -15,6 +17,9 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         public var confirmButtonView: UIView?
         public var activityIndicator: UIView?
         public var backgroundColor: UIColor
+        public var confirmButtonInsets: UIEdgeInsets
+        public var tableViewInsets: UIEdgeInsets
+        public var confirmButtonAnimationDuration: CGFloat
         public var lifeCycle: LifeCycle?
         
         public init(
@@ -23,6 +28,9 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             confirmButtonView: UIView? = nil,
             activityIndicator: UIView? = nil,
             backgroundColor: UIColor = .white,
+            confirmButtonInsets: UIEdgeInsets = .init(top: .zero, left: 16, bottom: 50, right: 16),
+            tableViewInsets: UIEdgeInsets = .init(top: .zero, left: .zero, bottom: .zero, right: .zero),
+            confirmButtonAnimationDuration: CGFloat = 1,
             lifeCycle: LifeCycle? = nil
         ) {
             self.navigationBarViewProperties = navigationBarViewProperties
@@ -30,6 +38,9 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             self.confirmButtonView = confirmButtonView
             self.activityIndicator = activityIndicator
             self.backgroundColor = backgroundColor
+            self.confirmButtonInsets = confirmButtonInsets
+            self.tableViewInsets = tableViewInsets
+            self.confirmButtonAnimationDuration = confirmButtonAnimationDuration
             self.lifeCycle = lifeCycle
         }
     }
@@ -38,12 +49,19 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     
     public var viewProperties: ViewProperties
     
+    // MARK: - Private properties
+    
+    private let keyboardService: KeyboardService
+    private var anyCancellable: Set<AnyCancellable> = []
+    
     // MARK: - Life cycle
     
     public init(
+        keyboardService: KeyboardService = .init(),
         viewProperties: ViewProperties
     ) {
         self.viewProperties = viewProperties
+        self.keyboardService = keyboardService
         
         super.init(nibName: nil, bundle: nil)
         
@@ -64,6 +82,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         view.backgroundColor = viewProperties.backgroundColor
         viewProperties.lifeCycle?.onViewDidLoad?()
+        subscribeToKeyboard()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -145,7 +164,10 @@ public final class TableViewVC: UIViewController, ViewProtocol {
     }
     
     private func addTableView(viewProperties: ViewProperties) {
-        addTableViewAndMakeConstraints(with: viewProperties.tableView)
+        addTableViewAndMakeConstraints(
+            with: viewProperties.tableView,
+            and: viewProperties.tableViewInsets
+        )
     }
     
     private func updateTableViewIfNeeded(newViewProperties: ViewProperties) {
@@ -154,21 +176,31 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties.tableView.snp.removeConstraints()
         viewProperties.tableView.removeFromSuperview()
         
-        addTableViewAndMakeConstraints(with: newViewProperties.tableView)
+        addTableViewAndMakeConstraints(
+            with: newViewProperties.tableView,
+            and: newViewProperties.tableViewInsets
+        )
     }
     
-    private func addTableViewAndMakeConstraints(with tableView: UIView) {
+    private func addTableViewAndMakeConstraints(with tableView: UIView, and insets: UIEdgeInsets) {
         view.addSubview(tableView)
         tableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.edges.equalToSuperview().inset(insets)
         }
     }
     
     private func addConfirmButtonView(viewProperties: ViewProperties) {
         guard let confirmButtonView = viewProperties.confirmButtonView else { return }
         
-        addConfirmButtonAndMakeConstraints(with: confirmButtonView)
-        remakeTableViewConstraints(with: viewProperties.tableView, button: confirmButtonView)
+        addConfirmButtonAndMakeConstraints(
+            with: confirmButtonView,
+            and: viewProperties.confirmButtonInsets
+        )
+        remakeTableViewConstraintsForButton(
+            with: viewProperties.tableView,
+            button: confirmButtonView,
+            insets: viewProperties.tableViewInsets
+        )
     }
     
     private func updateConfirmButtonIfNeeded(newViewProperties: ViewProperties) {
@@ -179,21 +211,37 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         viewProperties.confirmButtonView?.snp.removeConstraints()
         viewProperties.confirmButtonView?.removeFromSuperview()
         
-        addConfirmButtonAndMakeConstraints(with: confirmButtonView)
-        remakeTableViewConstraints(with: viewProperties.tableView, button: confirmButtonView)
+        addConfirmButtonAndMakeConstraints(
+            with: confirmButtonView,
+            and: viewProperties.confirmButtonInsets
+        )
+        remakeTableViewConstraintsForButton(
+            with: viewProperties.tableView,
+            button: confirmButtonView,
+            insets: viewProperties.tableViewInsets
+        )
     }
     
-    private func addConfirmButtonAndMakeConstraints(with button: UIView) {
+    private func addConfirmButtonAndMakeConstraints(with button: UIView, and insets: UIEdgeInsets) {
         view.addSubview(button)
         button.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.bottom.equalToSuperview().inset(50)
+            $0.leading.trailing.bottom.equalToSuperview().inset(insets)
         }
     }
     
-    private func remakeTableViewConstraints(with tableView: UIView, button: UIView) {
+    private func updateConfirmButtonConstraints(with button: UIView, and insets: UIEdgeInsets) {
+        button.snp.updateConstraints {
+            $0.leading.trailing.bottom.equalToSuperview().inset(insets)
+        }
+    }
+    
+    private func remakeTableViewConstraintsForButton(
+        with tableView: UIView,
+        button: UIView,
+        insets: UIEdgeInsets
+    ) {
         tableView.snp.remakeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
+            $0.top.leading.trailing.equalToSuperview().inset(insets)
             $0.bottom.equalTo(button.snp.top).inset(-16)
         }
     }
@@ -220,5 +268,43 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         loader.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+    }
+    
+    private func subscribeToKeyboard() {
+        keyboardService.showKeyboard.sink(
+            receiveValue: { [weak self] keyboardHeight in
+                guard let self, let confirmButton = viewProperties.confirmButtonView
+                else { return }
+                
+                let insets = UIEdgeInsets(
+                    top: viewProperties.confirmButtonInsets.top,
+                    left: viewProperties.confirmButtonInsets.left,
+                    bottom: viewProperties.confirmButtonInsets.bottom + keyboardHeight,
+                    right: viewProperties.confirmButtonInsets.right
+                )
+                UIView.animate(withDuration: viewProperties.confirmButtonAnimationDuration) {
+                    self.updateConfirmButtonConstraints(
+                        with: confirmButton,
+                        and: insets
+                    )
+                    confirmButton.superview?.layoutIfNeeded()
+                }
+            }
+        ).store(in: &anyCancellable)
+        
+        keyboardService.dismissKeyboard.sink(
+            receiveValue: { [weak self] _ in
+                guard let self, let confirmButton = viewProperties.confirmButtonView 
+                else { return }
+                
+                UIView.animate(withDuration: viewProperties.confirmButtonAnimationDuration) {
+                    self.updateConfirmButtonConstraints(
+                        with: confirmButton,
+                        and: self.viewProperties.confirmButtonInsets
+                    )
+                    confirmButton.superview?.layoutIfNeeded()
+                }
+            }
+        ).store(in: &anyCancellable)
     }
 }
