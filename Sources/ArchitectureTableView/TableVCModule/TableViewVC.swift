@@ -21,6 +21,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         public var tableViewInsets: UIEdgeInsets
         public var confirmButtonAnimationDuration: CGFloat
         public var lifeCycle: LifeCycle?
+        public var accessibilityId: String?
         
         public init(
             navigationBarViewProperties: NavigationBar.ViewProperties? = nil,
@@ -31,7 +32,8 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             confirmButtonInsets: UIEdgeInsets = .init(top: .zero, left: 16, bottom: 50, right: 16),
             tableViewInsets: UIEdgeInsets = .init(top: .zero, left: .zero, bottom: .zero, right: .zero),
             confirmButtonAnimationDuration: CGFloat = 1,
-            lifeCycle: LifeCycle? = nil
+            lifeCycle: LifeCycle? = nil,
+            accessibilityId: String? = nil
         ) {
             self.navigationBarViewProperties = navigationBarViewProperties
             self.tableView = tableView
@@ -42,6 +44,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
             self.tableViewInsets = tableViewInsets
             self.confirmButtonAnimationDuration = confirmButtonAnimationDuration
             self.lifeCycle = lifeCycle
+            self.accessibilityId = accessibilityId
         }
     }
     
@@ -69,6 +72,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         addConfirmButtonView(viewProperties: viewProperties)
         addActivityIndicator(viewProperties: viewProperties)
         setupNavigationBar(viewProperties: viewProperties)
+        view.accessibilityIdentifier = viewProperties.accessibilityId
         
         viewProperties.lifeCycle?.onInit?()
     }
@@ -294,7 +298,7 @@ public final class TableViewVC: UIViewController, ViewProtocol {
         
         keyboardService.dismissKeyboard.sink(
             receiveValue: { [weak self] _ in
-                guard let self, let confirmButton = viewProperties.confirmButtonView 
+                guard let self, let confirmButton = viewProperties.confirmButtonView
                 else { return }
                 
                 UIView.animate(withDuration: viewProperties.confirmButtonAnimationDuration) {
