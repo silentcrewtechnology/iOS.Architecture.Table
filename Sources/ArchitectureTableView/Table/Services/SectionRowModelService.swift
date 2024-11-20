@@ -23,6 +23,7 @@ public struct SectionRowModelService {
                 center: row.center,
                 trailing: row.trailing,
                 centralBlockAlignment: row.centralBlockAlignment,
+                verticalAlignment: row.verticalAlignment,
                 margins: row.margings
             )
             let cellModel = CellModel(
