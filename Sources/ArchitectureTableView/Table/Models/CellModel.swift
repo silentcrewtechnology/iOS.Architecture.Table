@@ -11,7 +11,7 @@ public struct CellModel {
     public init(
         view: UIView,
         selectionStyle: UITableViewCell.SelectionStyle = .gray,
-        height: CGFloat?,
+        height: CGFloat? = nil,
         didTap: ((UITableView, IndexPath) -> Void)? = nil,
         insets: UIEdgeInsets = .zero,
         backgroundColor: UIColor = .white

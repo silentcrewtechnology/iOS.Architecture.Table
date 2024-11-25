@@ -10,33 +10,6 @@ import SnapKit
 
 public final class ContainerTableCell: UITableViewCell {
     
-    public var view: UIView? {
-        didSet {
-            addView()
-            setConstraints()
-        }
-    }
-    
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    private func addView() {
-        guard let view else { return }
-        contentView.addSubview(view)
-    }
-    
-    private func setConstraints() {
-        guard let view else { return }
-        view.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-    }
-    
     public override func prepareForReuse() {
         super.prepareForReuse()
         contentView.subviews.forEach { $0.removeFromSuperview() }
@@ -55,13 +28,12 @@ public extension UIView {
             with: indexPath
         )
         
-        cell.view?.removeFromSuperview()
         cell.contentView.addSubview(self)
-
-        self.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(insets)
+        
+        snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(insets).priority(999)
         }
-
+        
         return cell
     }
 }
