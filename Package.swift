@@ -20,8 +20,8 @@ let package = Package(
         .target(
             name: "ArchitectureTableView",
             dependencies: [
-                .product(name: "Architecture", package: "ios.architecture"),
-                .product(name: "DesignSystem", package: "ios.designsystem"),
+                .product(name: "Architecture", package: "iOS.Architecture"),
+                .product(name: "DesignSystem", package: "iOS.DesignSystem"),
             ]
         ),
     ]
